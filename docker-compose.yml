@@ -1,0 +1,180 @@
+# =====================================================================
+# Projet Thème 22 — Gestion du cycle de vie des API avec Gravitee
+# SI Groupe 2 — IBAM 2026
+#
+# Contenu : Gravitee APIM 4.x Community Edition (fichier officiel adapté)
+#           + PostgreSQL (base de référence) + API FastAPI (backend)
+#
+# Démarrage :  cp .env.example .env  &&  docker compose up -d --build
+# Console    :  http://localhost:8084   (admin / admin)
+# Portail    :  http://localhost:8085   (admin / admin)
+# Gateway    :  http://localhost:8082
+# Backend    :  http://localhost:8000/docs
+# =====================================================================
+
+name: gravitee-structures-sanitaires
+
+networks:
+  frontend:
+  storage:
+  backend:
+
+volumes:
+  data-elasticsearch:
+  data-mongo:
+  data-postgres:
+
+services:
+  # ------------------------------------------------------------------
+  # Stockage interne de Gravitee
+  # ------------------------------------------------------------------
+  mongodb:
+    image: mongo:${MONGODB_VERSION:-6.0}
+    container_name: gio_apim_mongodb
+    restart: unless-stopped
+    volumes:
+      - data-mongo:/data/db
+    healthcheck:
+      test: mongosh --eval 'db.runCommand({serverStatus:1}).ok' --quiet | grep 1
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - storage
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-8.17.2}
+    container_name: gio_apim_elasticsearch
+    restart: unless-stopped
+    volumes:
+      - data-elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - xpack.security.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile: 65536
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks:
+      - storage
+
+  # ------------------------------------------------------------------
+  # Gravitee API Management
+  # ------------------------------------------------------------------
+  gateway:
+    image: graviteeio/apim-gateway:${APIM_VERSION:-4.12.25}
+    container_name: gio_apim_gateway
+    restart: unless-stopped
+    ports:
+      - '8082:8082'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_ratelimit_mongodb_uri=mongodb://mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_reporters_elasticsearch_endpoints_0=http://elasticsearch:9200
+    networks:
+      - storage
+      - frontend
+      - backend          # permet à la gateway de joindre http://structures-api:8000
+
+  management_api:
+    image: graviteeio/apim-management-api:${APIM_VERSION:-4.12.25}
+    container_name: gio_apim_management_api
+    restart: unless-stopped
+    ports:
+      - '8083:8083'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_analytics_elasticsearch_endpoints_0=http://elasticsearch:9200
+    networks:
+      - storage
+      - frontend
+
+  management_ui:
+    image: graviteeio/apim-management-ui:${APIM_VERSION:-4.12.25}
+    container_name: gio_apim_management_ui
+    restart: unless-stopped
+    ports:
+      - '8084:8080'
+    depends_on:
+      - management_api
+    environment:
+      - MGMT_API_URL=http://localhost:8083/management/
+    networks:
+      - frontend
+
+  portal_ui:
+    image: graviteeio/apim-portal-ui:${APIM_VERSION:-4.12.25}
+    container_name: gio_apim_portal_ui
+    restart: unless-stopped
+    ports:
+      - '8085:8080'
+    depends_on:
+      - management_api
+    environment:
+      - PORTAL_API_URL=http://localhost:8083/portal
+    networks:
+      - frontend
+
+  # ------------------------------------------------------------------
+  # Backend du projet
+  # ------------------------------------------------------------------
+  postgres:
+    image: postgres:16
+    container_name: structures_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-sante}
+      POSTGRES_USER: ${DB_USER:-sante}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sante}
+    ports:
+      - '5433:5432'      # 5433 côté machine pour éviter un conflit avec un PostgreSQL local
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-sante} -d ${DB_NAME:-sante}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+
+  structures-api:
+    build: ./api
+    image: structures-api:2.0.0
+    container_name: structures_api
+    restart: unless-stopped
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-sante}
+      DB_USER: ${DB_USER:-sante}
+      DB_PASSWORD: ${DB_PASSWORD:-sante}
+    ports:
+      - '8000:8000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend

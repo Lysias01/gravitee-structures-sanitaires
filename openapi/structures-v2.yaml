@@ -1,0 +1,467 @@
+openapi: 3.1.0
+info:
+  title: API Structures sanitaires
+  version: 2.0.0
+  description: 'Version 2 : ajoute statut, nombre de lits, téléphone, services et
+    date d''ouverture, regroupe région et ville dans `localisation`, ajoute le filtre
+    `statut` et le tri `tri`.
+
+
+    Accès via la gateway Gravitee : `http://localhost:8082/sante/structures/v2` avec
+    l''en-tête `X-Gravitee-Api-Key`.'
+  contact:
+    name: SI Groupe 2 — IBAM 2026
+paths:
+  /structures:
+    get:
+      summary: Lister les structures (paginé, triable)
+      operationId: list_structures_api_v2_structures_get
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Numéro de page, à partir de 1
+          default: 1
+          title: Page
+        description: Numéro de page, à partir de 1
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Nombre d'éléments par page (1 à 100)
+          default: 10
+          title: Size
+        description: Nombre d'éléments par page (1 à 100)
+      - name: tri
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/Tri'
+          description: 'Tri : id, nom, -nom, lits, -lits'
+          default: id
+        description: 'Tri : id, nom, -nom, lits, -lits'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageV2'
+        '400':
+          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Base de données indisponible (DATABASE_UNAVAILABLE)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur interne (INTERNAL_ERROR)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Clé d'API absente, invalide ou souscription fermée (renvoyé
+            par la gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Unauthorized
+                http_status_code: 401
+        '429':
+          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la
+            gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Rate limit exceeded ! You reach the limit of 5 requests per
+                  10 seconds
+                http_status_code: 429
+      tags:
+      - Structures sanitaires
+      security:
+      - ApiKeyGravitee: []
+  /structures/search:
+    get:
+      summary: Rechercher des structures (paginé, triable)
+      description: 'Au moins un critère est obligatoire. Nouveau en v2 : filtre `statut`.'
+      operationId: search_structures_api_v2_structures_search_get
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            minLength: 2
+            maxLength: 100
+          - type: 'null'
+          description: Texte recherché dans le nom ou le code
+          title: Q
+        description: Texte recherché dans le nom ou le code
+      - name: type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/TypeStructure'
+          - type: 'null'
+          title: Type
+      - name: statut
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/Statut'
+          - type: 'null'
+          description: PUBLIC ou PRIVE
+          title: Statut
+        description: PUBLIC ou PRIVE
+      - name: region
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 60
+          - type: 'null'
+          title: Region
+      - name: ville
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Ville
+      - name: tri
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/Tri'
+          default: id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 10
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageV2'
+        '400':
+          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Base de données indisponible (DATABASE_UNAVAILABLE)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur interne (INTERNAL_ERROR)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Clé d'API absente, invalide ou souscription fermée (renvoyé
+            par la gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Unauthorized
+                http_status_code: 401
+        '429':
+          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la
+            gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Rate limit exceeded ! You reach the limit of 5 requests per
+                  10 seconds
+                http_status_code: 429
+      tags:
+      - Structures sanitaires
+      security:
+      - ApiKeyGravitee: []
+  /structures/{id}:
+    get:
+      summary: Obtenir le détail complet d'une structure
+      operationId: get_structure_api_v2_structures__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          description: Identifiant technique de la structure
+          title: Id
+        description: Identifiant technique de la structure
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StructureV2'
+        '404':
+          description: Structure inexistante (STRUCTURE_NOT_FOUND)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Base de données indisponible (DATABASE_UNAVAILABLE)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erreur interne (INTERNAL_ERROR)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Clé d'API absente, invalide ou souscription fermée (renvoyé
+            par la gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Unauthorized
+                http_status_code: 401
+        '429':
+          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la
+            gateway Gravitee)
+          content:
+            application/json:
+              example:
+                message: Rate limit exceeded ! You reach the limit of 5 requests per
+                  10 seconds
+                http_status_code: 429
+      tags:
+      - Structures sanitaires
+      security:
+      - ApiKeyGravitee: []
+components:
+  schemas:
+    ErrorDetail:
+      properties:
+        champ:
+          type: string
+          title: Champ
+          examples:
+          - size
+        message:
+          type: string
+          title: Message
+          examples:
+          - Input should be less than or equal to 100
+      type: object
+      required:
+      - champ
+      - message
+      title: ErrorDetail
+    ErrorResponse:
+      properties:
+        status:
+          type: integer
+          title: Status
+          examples:
+          - 404
+        code:
+          type: string
+          title: Code
+          examples:
+          - STRUCTURE_NOT_FOUND
+        message:
+          type: string
+          title: Message
+          examples:
+          - Aucune structure avec l'id 999
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          default: []
+      type: object
+      required:
+      - status
+      - code
+      - message
+      title: ErrorResponse
+    Localisation:
+      properties:
+        region:
+          type: string
+          title: Region
+          examples:
+          - Centre
+        ville:
+          type: string
+          title: Ville
+          examples:
+          - Ouagadougou
+      type: object
+      required:
+      - region
+      - ville
+      title: Localisation
+    PageV2:
+      properties:
+        page:
+          type: integer
+          title: Page
+        size:
+          type: integer
+          title: Size
+        total:
+          type: integer
+          title: Total
+        pages:
+          type: integer
+          title: Pages
+        items:
+          items:
+            $ref: '#/components/schemas/StructureV2'
+          type: array
+          title: Items
+      type: object
+      required:
+      - page
+      - size
+      - total
+      - pages
+      - items
+      title: PageV2
+    Statut:
+      type: string
+      enum:
+      - PUBLIC
+      - PRIVE
+      title: Statut
+    StructureV2:
+      properties:
+        id:
+          type: integer
+          title: Id
+          examples:
+          - 1
+        code:
+          type: string
+          title: Code
+          examples:
+          - CHU-CEN-001
+        nom:
+          type: string
+          title: Nom
+          examples:
+          - CHU Fictif de Ouagadougou Nord
+        type:
+          $ref: '#/components/schemas/TypeStructure'
+        statut:
+          $ref: '#/components/schemas/Statut'
+        localisation:
+          $ref: '#/components/schemas/Localisation'
+        nombre_lits:
+          type: integer
+          title: Nombre Lits
+          examples:
+          - 620
+        telephone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Telephone
+          examples:
+          - +226 25 00 10 01
+        services:
+          items:
+            type: string
+          type: array
+          title: Services
+          examples:
+          - - urgences
+            - maternite
+        date_ouverture:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Date Ouverture
+      type: object
+      required:
+      - id
+      - code
+      - nom
+      - type
+      - statut
+      - localisation
+      - nombre_lits
+      - services
+      title: StructureV2
+    Tri:
+      type: string
+      enum:
+      - id
+      - nom
+      - -nom
+      - lits
+      - -lits
+      title: Tri
+    TypeStructure:
+      type: string
+      enum:
+      - CHU
+      - CHR
+      - CMA
+      - CSPS
+      - CLINIQUE
+      title: TypeStructure
+  securitySchemes:
+    ApiKeyGravitee:
+      type: apiKey
+      in: header
+      name: X-Gravitee-Api-Key
+servers:
+- url: http://structures-api:8000/api/v2
+  description: Backend (réseau Docker, cible de la gateway)

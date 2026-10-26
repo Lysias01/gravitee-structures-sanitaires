@@ -1,0 +1,634 @@
+{
+  "info": {
+    "name": "Thème 22 - Structures sanitaires (Gravitee)",
+    "description": "SI Groupe 2 — IBAM 2026. Dossiers 1 à 3 : exécution automatique (Newman). Dossier 4 : à lancer manuellement selon l'état de l'API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Backend direct",
+      "item": [
+        {
+          "name": "Santé du service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/health",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Service et base UP\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"UP\");",
+                  "  pm.expect(b.database).to.eql(\"UP\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v1 - Liste paginée (page 2, size 5)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures?page=2&size=5",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
+                  "  pm.expect(b.items.length).to.be.at.most(b.size);",
+                  "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
+                  "});",
+                  "",
+                  "pm.test(\"Page 2 de 5 éléments sur 40\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.page).to.eql(2);",
+                  "  pm.expect(b.items).to.have.length(5);",
+                  "  pm.expect(b.total).to.eql(40);",
+                  "  pm.expect(b.items[0].id).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v1 - Détail id 1 (données du seed)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/1",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Correspond à la ligne CHU-CEN-001 du script 02_seed.sql\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.eql({id: 1, code: \"CHU-CEN-001\", nom: \"CHU Fictif de Ouagadougou Nord\", type: \"CHU\", region: \"Centre\", ville: \"Ouagadougou\"});",
+                  "});",
+                  "pm.test(\"En-tête de corrélation présent\", () => pm.response.to.have.header(\"X-Correlation-ID\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v1 - Recherche région Centre + type CSPS",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/search?region=centre&type=CSPS",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
+                  "  pm.expect(b.items.length).to.be.at.most(b.size);",
+                  "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
+                  "});",
+                  "",
+                  "pm.test(\"Uniquement des CSPS du Centre\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.total).to.eql(2);",
+                  "  b.items.forEach(s => { pm.expect(s.type).to.eql(\"CSPS\"); pm.expect(s.region).to.eql(\"Centre\"); });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v1 - Recherche texte 'bobo'",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/search?q=bobo",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Trouve le CHU de Bobo-Dioulasso\", () => {",
+                  "  const codes = pm.response.json().items.map(s => s.code);",
+                  "  pm.expect(codes).to.include(\"CHU-HBS-001\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - Structure inexistante (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/999",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test(\"Code STRUCTURE_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"STRUCTURE_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - Recherche sans critère (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/search",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test(\"Code MISSING_CRITERIA\", () => pm.expect(pm.response.json().code).to.eql(\"MISSING_CRITERIA\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - size hors limite (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures?size=500",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test(\"Détail sur le champ size\", () => pm.expect(pm.response.json().details[0].champ).to.eql(\"size\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - id non numérique (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/abc",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - Type inconnu (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/search?type=HOPITAL",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur - Méthode interdite DELETE (405)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{backend_url}}/api/v1/structures/1",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 405\", () => pm.response.to.have.status(405));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v2 - Détail id 9 (nouveau format)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v2/structures/9",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Format v2 : localisation imbriquée + nouveaux champs\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.localisation).to.eql({region: \"Hauts-Bassins\", ville: \"Bobo-Dioulasso\"});",
+                  "  pm.expect(b).to.include.all.keys(\"statut\", \"nombre_lits\", \"telephone\", \"services\", \"date_ouverture\");",
+                  "  pm.expect(b).to.not.have.property(\"region\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "v2 - Cliniques privées triées par lits décroissants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{backend_url}}/api/v2/structures/search?statut=PRIVE&tri=-lits",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
+                  "  pm.expect(b.items.length).to.be.at.most(b.size);",
+                  "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
+                  "});",
+                  "",
+                  "pm.test(\"Toutes privées et triées\", () => {",
+                  "  const items = pm.response.json().items;",
+                  "  items.forEach(s => pm.expect(s.statut).to.eql(\"PRIVE\"));",
+                  "  for (let i = 1; i < items.length; i++) pm.expect(items[i - 1].nombre_lits).to.be.at.least(items[i].nombre_lits);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Gateway Gravitee - accès et quota",
+      "item": [
+        {
+          "name": "Sans clé d'API -> 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gateway_v1}}/structures",
+            "description": "Le plan API Key exige l'en-tête X-Gravitee-Api-Key."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Clé d'API inventée -> 401",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "cle-inventee-123"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bout en bout - Clé valide -> 200 et données de la base",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures/1",
+            "description": "Chaîne complète : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"La gateway renvoie la ligne insérée par 02_seed.sql\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.code).to.eql(\"CHU-CEN-001\");",
+                  "  pm.expect(b.nom).to.eql(\"CHU Fictif de Ouagadougou Nord\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Recherche paginée via la gateway",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures/search?region=Hauts-Bassins&size=2",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
+                  "  pm.expect(b.items.length).to.be.at.most(b.size);",
+                  "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Erreur backend relayée par la gateway (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures/999",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Format d'erreur standard\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.all.keys(\"status\", \"code\", \"message\", \"details\");",
+                  "  pm.expect(b.status).to.eql(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quota - rafale de 6 appels -> 429",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures",
+            "description": "Attendre 10 secondes avant de relancer la collection."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "const codes = [];",
+                  "const call = (n) => {",
+                  "  if (n === 0) {",
+                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
+                  "    return;",
+                  "  }",
+                  "  pm.sendRequest({url: pm.variables.replaceIn(\"{{gateway_v1}}/structures\"), method: \"GET\",",
+                  "                  header: {\"X-Gravitee-Api-Key\": pm.variables.get(\"api_key\")}}, (err, res) => {",
+                  "    codes.push(res ? res.code : 0);",
+                  "    call(n - 1);",
+                  "  });",
+                  "};",
+                  "call(6);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Gateway Gravitee - version 2",
+      "item": [
+        {
+          "name": "v2 via la gateway -> 200",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key_v2}}"
+              }
+            ],
+            "url": "{{gateway_v2}}/structures/1",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Format v2\", () => pm.expect(pm.response.json()).to.have.property(\"localisation\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Cycle de vie (manuel)",
+      "item": [
+        {
+          "name": "Après UNPUBLISH : l'API répond toujours (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures/1",
+            "description": "À lancer quand l'API est retirée du portail (UNPUBLISHED) mais toujours démarrée."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Après STOP : la gateway ne route plus",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Gravitee-Api-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": "{{gateway_v1}}/structures/1",
+            "description": "À lancer quand l'API est arrêtée (Stop the API)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Plus de routage vers le backend\", () => pm.expect(pm.response.code).to.be.oneOf([404, 503]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
