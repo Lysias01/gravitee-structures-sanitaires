@@ -1,0 +1,282 @@
+{
+  "export": {
+    "date": "2026-10-27T08:54:04.390436996Z",
+    "apimVersion": "4.12.25"
+  },
+  "api": {
+    "definitionVersion": "V4",
+    "type": "PROXY",
+    "listeners": [
+      {
+        "type": "HTTP",
+        "paths": [
+          {
+            "path": "/sante/structures/v2/",
+            "overrideAccess": false
+          }
+        ],
+        "pathMappings": [],
+        "entrypoints": [
+          {
+            "type": "http-proxy",
+            "qos": "AUTO"
+          }
+        ],
+        "servers": []
+      }
+    ],
+    "endpointGroups": [
+      {
+        "name": "default-group",
+        "type": "http-proxy",
+        "loadBalancer": {
+          "type": "ROUND_ROBIN"
+        },
+        "sharedConfiguration": "{}",
+        "endpoints": [
+          {
+            "name": "default",
+            "type": "http-proxy",
+            "weight": 1,
+            "inheritConfiguration": true,
+            "configuration": {
+              "target": "http://structures-api:8000/api/v2"
+            },
+            "sharedConfigurationOverride": "{}",
+            "services": {},
+            "secondary": false,
+            "tenants": []
+          }
+        ],
+        "services": {}
+      }
+    ],
+    "analytics": {
+      "enabled": true
+    },
+    "flowExecution": {
+      "mode": "DEFAULT",
+      "matchRequired": false
+    },
+    "flows": [
+      {
+        "id": "38498a6c-116f-4d3d-898a-6c116f0d3df1",
+        "name": "",
+        "enabled": true,
+        "selectors": [
+          {
+            "type": "CONDITION",
+            "condition": ""
+          },
+          {
+            "type": "HTTP",
+            "path": "/structures",
+            "pathOperator": "EQUALS",
+            "methods": [
+              "GET"
+            ]
+          }
+        ],
+        "request": [],
+        "response": [],
+        "subscribe": [],
+        "publish": [],
+        "entrypointConnect": [],
+        "interact": [],
+        "tags": []
+      },
+      {
+        "id": "cfed65cc-36be-4e17-ad65-cc36be3e17e8",
+        "name": "",
+        "enabled": true,
+        "selectors": [
+          {
+            "type": "CONDITION",
+            "condition": ""
+          },
+          {
+            "type": "HTTP",
+            "path": "/structures/search",
+            "pathOperator": "EQUALS",
+            "methods": [
+              "GET"
+            ]
+          }
+        ],
+        "request": [],
+        "response": [],
+        "subscribe": [],
+        "publish": [],
+        "entrypointConnect": [],
+        "interact": [],
+        "tags": []
+      },
+      {
+        "id": "fb52f772-2f9c-41e3-92f7-722f9c71e3a5",
+        "name": "",
+        "enabled": true,
+        "selectors": [
+          {
+            "type": "CONDITION",
+            "condition": ""
+          },
+          {
+            "type": "HTTP",
+            "path": "/structures/:id",
+            "pathOperator": "EQUALS",
+            "methods": [
+              "GET"
+            ]
+          }
+        ],
+        "request": [],
+        "response": [],
+        "subscribe": [],
+        "publish": [],
+        "entrypointConnect": [],
+        "interact": [],
+        "tags": []
+      }
+    ],
+    "allowedInApiProducts": false,
+    "allowMultiJwtOauth2Subscriptions": false,
+    "id": "275bfd23-e207-45a0-9bfd-23e207e5a0c2",
+    "name": "API Structures sanitaires",
+    "description": "Version 2 : ajoute statut, nombre de lits, téléphone, services et date d'ouverture, regroupe région et ville dans `localisation`, ajoute le filtre `statut` et le tri `tri`.\n\nAccès via la gateway Gravitee : `http://localhost:8082/sante/structures/v2` avec l'en-tête `X-Gravitee-Api-Key`.",
+    "apiVersion": "2.0.0",
+    "deployedAt": "2026-10-27T08:37:32.22Z",
+    "createdAt": "2026-10-27T08:26:28.36Z",
+    "updatedAt": "2026-10-27T08:39:15.925Z",
+    "disableMembershipNotifications": false,
+    "groups": [],
+    "state": "STARTED",
+    "visibility": "PUBLIC",
+    "labels": [],
+    "lifecycleState": "PUBLISHED",
+    "tags": [],
+    "primaryOwner": {
+      "id": "e9afc3d3-19c8-4885-afc3-d319c8a88519",
+      "displayName": "admin",
+      "type": "USER"
+    },
+    "categories": [],
+    "originContext": {
+      "origin": "MANAGEMENT"
+    },
+    "responseTemplates": {},
+    "resources": [],
+    "properties": []
+  },
+  "metadata": [
+    {
+      "key": "email-support",
+      "name": "email-support",
+      "format": "MAIL",
+      "value": "${(api.primaryOwner.email)!''}",
+      "defaultValue": "support@change.me"
+    }
+  ],
+  "pages": [
+    {
+      "id": "f2f8a6d2-81d2-422a-b8a6-d281d2a22a73",
+      "crossId": "ff600dd7-f163-4c83-a00d-d7f163ac8397",
+      "name": "Swagger",
+      "type": "SWAGGER",
+      "content": "openapi: 3.1.0\ninfo:\n  title: API Structures sanitaires\n  version: 2.0.0\n  description: 'Version 2 : ajoute statut, nombre de lits, téléphone, services et\n    date d''ouverture, regroupe région et ville dans `localisation`, ajoute le filtre\n    `statut` et le tri `tri`.\n\n\n    Accès via la gateway Gravitee : `http://localhost:8082/sante/structures/v2` avec\n    l''en-tête `X-Gravitee-Api-Key`.'\n  contact:\n    name: SI Groupe 2 — IBAM 2026\npaths:\n  /structures:\n    get:\n      summary: Lister les structures (paginé, triable)\n      operationId: list_structures_api_v2_structures_get\n      parameters:\n      - name: page\n        in: query\n        required: false\n        schema:\n          type: integer\n          minimum: 1\n          description: Numéro de page, à partir de 1\n          default: 1\n          title: Page\n        description: Numéro de page, à partir de 1\n      - name: size\n        in: query\n        required: false\n        schema:\n          type: integer\n          maximum: 100\n          minimum: 1\n          description: Nombre d'éléments par page (1 à 100)\n          default: 10\n          title: Size\n        description: Nombre d'éléments par page (1 à 100)\n      - name: tri\n        in: query\n        required: false\n        schema:\n          $ref: '#/components/schemas/Tri'\n          description: 'Tri : id, nom, -nom, lits, -lits'\n          default: id\n        description: 'Tri : id, nom, -nom, lits, -lits'\n      responses:\n        '200':\n          description: Successful Response\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/PageV2'\n        '400':\n          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '503':\n          description: Base de données indisponible (DATABASE_UNAVAILABLE)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '500':\n          description: Erreur interne (INTERNAL_ERROR)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '401':\n          description: Clé d'API absente, invalide ou souscription fermée (renvoyé\n            par la gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Unauthorized\n                http_status_code: 401\n        '429':\n          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la\n            gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Rate limit exceeded ! You reach the limit of 5 requests per\n                  10 seconds\n                http_status_code: 429\n      tags:\n      - Structures sanitaires\n      security:\n      - ApiKeyGravitee: []\n  /structures/search:\n    get:\n      summary: Rechercher des structures (paginé, triable)\n      description: 'Au moins un critère est obligatoire. Nouveau en v2 : filtre `statut`.'\n      operationId: search_structures_api_v2_structures_search_get\n      parameters:\n      - name: q\n        in: query\n        required: false\n        schema:\n          anyOf:\n          - type: string\n            minLength: 2\n            maxLength: 100\n          - type: 'null'\n          description: Texte recherché dans le nom ou le code\n          title: Q\n        description: Texte recherché dans le nom ou le code\n      - name: type\n        in: query\n        required: false\n        schema:\n          anyOf:\n          - $ref: '#/components/schemas/TypeStructure'\n          - type: 'null'\n          title: Type\n      - name: statut\n        in: query\n        required: false\n        schema:\n          anyOf:\n          - $ref: '#/components/schemas/Statut'\n          - type: 'null'\n          description: PUBLIC ou PRIVE\n          title: Statut\n        description: PUBLIC ou PRIVE\n      - name: region\n        in: query\n        required: false\n        schema:\n          anyOf:\n          - type: string\n            maxLength: 60\n          - type: 'null'\n          title: Region\n      - name: ville\n        in: query\n        required: false\n        schema:\n          anyOf:\n          - type: string\n            maxLength: 80\n          - type: 'null'\n          title: Ville\n      - name: tri\n        in: query\n        required: false\n        schema:\n          $ref: '#/components/schemas/Tri'\n          default: id\n      - name: page\n        in: query\n        required: false\n        schema:\n          type: integer\n          minimum: 1\n          default: 1\n          title: Page\n      - name: size\n        in: query\n        required: false\n        schema:\n          type: integer\n          maximum: 100\n          minimum: 1\n          default: 10\n          title: Size\n      responses:\n        '200':\n          description: Successful Response\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/PageV2'\n        '400':\n          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '503':\n          description: Base de données indisponible (DATABASE_UNAVAILABLE)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '500':\n          description: Erreur interne (INTERNAL_ERROR)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '401':\n          description: Clé d'API absente, invalide ou souscription fermée (renvoyé\n            par la gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Unauthorized\n                http_status_code: 401\n        '429':\n          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la\n            gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Rate limit exceeded ! You reach the limit of 5 requests per\n                  10 seconds\n                http_status_code: 429\n      tags:\n      - Structures sanitaires\n      security:\n      - ApiKeyGravitee: []\n  /structures/{id}:\n    get:\n      summary: Obtenir le détail complet d'une structure\n      operationId: get_structure_api_v2_structures__id__get\n      parameters:\n      - name: id\n        in: path\n        required: true\n        schema:\n          type: integer\n          minimum: 1\n          description: Identifiant technique de la structure\n          title: Id\n        description: Identifiant technique de la structure\n      responses:\n        '200':\n          description: Successful Response\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/StructureV2'\n        '404':\n          description: Structure inexistante (STRUCTURE_NOT_FOUND)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '400':\n          description: Paramètres invalides (VALIDATION_ERROR, MISSING_CRITERIA)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '503':\n          description: Base de données indisponible (DATABASE_UNAVAILABLE)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '500':\n          description: Erreur interne (INTERNAL_ERROR)\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ErrorResponse'\n        '401':\n          description: Clé d'API absente, invalide ou souscription fermée (renvoyé\n            par la gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Unauthorized\n                http_status_code: 401\n        '429':\n          description: Limite de requêtes ou quota du plan dépassé (renvoyé par la\n            gateway Gravitee)\n          content:\n            application/json:\n              example:\n                message: Rate limit exceeded ! You reach the limit of 5 requests per\n                  10 seconds\n                http_status_code: 429\n      tags:\n      - Structures sanitaires\n      security:\n      - ApiKeyGravitee: []\ncomponents:\n  schemas:\n    ErrorDetail:\n      properties:\n        champ:\n          type: string\n          title: Champ\n          examples:\n          - size\n        message:\n          type: string\n          title: Message\n          examples:\n          - Input should be less than or equal to 100\n      type: object\n      required:\n      - champ\n      - message\n      title: ErrorDetail\n    ErrorResponse:\n      properties:\n        status:\n          type: integer\n          title: Status\n          examples:\n          - 404\n        code:\n          type: string\n          title: Code\n          examples:\n          - STRUCTURE_NOT_FOUND\n        message:\n          type: string\n          title: Message\n          examples:\n          - Aucune structure avec l'id 999\n        details:\n          items:\n            $ref: '#/components/schemas/ErrorDetail'\n          type: array\n          title: Details\n          default: []\n      type: object\n      required:\n      - status\n      - code\n      - message\n      title: ErrorResponse\n    Localisation:\n      properties:\n        region:\n          type: string\n          title: Region\n          examples:\n          - Centre\n        ville:\n          type: string\n          title: Ville\n          examples:\n          - Ouagadougou\n      type: object\n      required:\n      - region\n      - ville\n      title: Localisation\n    PageV2:\n      properties:\n        page:\n          type: integer\n          title: Page\n        size:\n          type: integer\n          title: Size\n        total:\n          type: integer\n          title: Total\n        pages:\n          type: integer\n          title: Pages\n        items:\n          items:\n            $ref: '#/components/schemas/StructureV2'\n          type: array\n          title: Items\n      type: object\n      required:\n      - page\n      - size\n      - total\n      - pages\n      - items\n      title: PageV2\n    Statut:\n      type: string\n      enum:\n      - PUBLIC\n      - PRIVE\n      title: Statut\n    StructureV2:\n      properties:\n        id:\n          type: integer\n          title: Id\n          examples:\n          - 1\n        code:\n          type: string\n          title: Code\n          examples:\n          - CHU-CEN-001\n        nom:\n          type: string\n          title: Nom\n          examples:\n          - CHU Fictif de Ouagadougou Nord\n        type:\n          $ref: '#/components/schemas/TypeStructure'\n        statut:\n          $ref: '#/components/schemas/Statut'\n        localisation:\n          $ref: '#/components/schemas/Localisation'\n        nombre_lits:\n          type: integer\n          title: Nombre Lits\n          examples:\n          - 620\n        telephone:\n          anyOf:\n          - type: string\n          - type: 'null'\n          title: Telephone\n          examples:\n          - +226 25 00 10 01\n        services:\n          items:\n            type: string\n          type: array\n          title: Services\n          examples:\n          - - urgences\n            - maternite\n        date_ouverture:\n          anyOf:\n          - type: string\n            format: date\n          - type: 'null'\n          title: Date Ouverture\n      type: object\n      required:\n      - id\n      - code\n      - nom\n      - type\n      - statut\n      - localisation\n      - nombre_lits\n      - services\n      title: StructureV2\n    Tri:\n      type: string\n      enum:\n      - id\n      - nom\n      - -nom\n      - lits\n      - -lits\n      title: Tri\n    TypeStructure:\n      type: string\n      enum:\n      - CHU\n      - CHR\n      - CMA\n      - CSPS\n      - CLINIQUE\n      title: TypeStructure\n  securitySchemes:\n    ApiKeyGravitee:\n      type: apiKey\n      in: header\n      name: X-Gravitee-Api-Key\nservers:\n- url: http://structures-api:8000/api/v2\n  description: Backend (réseau Docker, cible de la gateway)\n",
+      "order": 0,
+      "published": true,
+      "visibility": "PUBLIC",
+      "updatedAt": "2026-10-27T08:26:28.495Z",
+      "configuration": {},
+      "homepage": false,
+      "excludedAccessControls": false,
+      "accessControls": [],
+      "metadata": {}
+    }
+  ],
+  "plans": [
+    {
+      "definitionVersion": "V4",
+      "flows": [
+        {
+          "id": "6f6267af-d68b-4f73-a267-afd68b1f734b",
+          "enabled": true,
+          "selectors": [
+            {
+              "type": "HTTP",
+              "path": "/",
+              "pathOperator": "STARTS_WITH",
+              "methods": []
+            }
+          ],
+          "request": [
+            {
+              "name": "Rate Limiting",
+              "enabled": true,
+              "policy": "rate-limit",
+              "configuration": {
+                "async": false,
+                "addHeaders": true,
+                "rate": {
+                  "useKeyOnly": false,
+                  "periodTime": 10,
+                  "limit": 5,
+                  "periodTimeUnit": "SECONDS",
+                  "key": ""
+                },
+                "errorStrategy": "FALLBACK_PASS_TROUGH"
+              }
+            },
+            {
+              "name": "Quota",
+              "enabled": true,
+              "policy": "quota",
+              "configuration": {
+                "async": false,
+                "addHeaders": true,
+                "quota": {
+                  "useKeyOnly": false,
+                  "periodTime": 1,
+                  "limit": 1000,
+                  "periodTimeUnit": "DAYS",
+                  "key": ""
+                },
+                "errorStrategy": "FALLBACK_PASS_TROUGH"
+              }
+            }
+          ],
+          "response": [],
+          "subscribe": [],
+          "publish": [],
+          "entrypointConnect": [],
+          "interact": [],
+          "tags": []
+        }
+      ],
+      "id": "b6ce13bb-5239-48ee-8e13-bb5239d8eec5",
+      "name": "Standard v2",
+      "description": "",
+      "security": {
+        "type": "API_KEY",
+        "configuration": {
+          "source": "HEADER"
+        }
+      },
+      "mode": "STANDARD",
+      "characteristics": [],
+      "commentMessage": "",
+      "commentRequired": false,
+      "createdAt": "2026-10-27T08:37:04.754Z",
+      "excludedGroups": [],
+      "generalConditions": "",
+      "order": 1,
+      "publishedAt": "2026-10-27T08:37:23.397Z",
+      "status": "PUBLISHED",
+      "tags": [],
+      "type": "API",
+      "updatedAt": "2026-10-27T08:37:23.397Z",
+      "validation": "MANUAL"
+    }
+  ],
+  "apiMedia": []
+}
