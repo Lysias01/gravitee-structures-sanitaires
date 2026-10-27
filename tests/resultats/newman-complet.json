@@ -1,4 +1,4 @@
-{
+﻿{
   "collection": {
     "item": [
       {
@@ -7,7 +7,7 @@
         "item": [
           {
             "id": "fb7bba85-1fab-4b99-bdcb-4bb961ca00d0",
-            "name": "Santé du service",
+            "name": "SantÃ© du service",
             "request": {
               "description": {
                 "content": "",
@@ -47,7 +47,7 @@
           },
           {
             "id": "5f82b3e7-7c1f-4be7-a714-71b769b745dd",
-            "name": "v1 - Liste paginée (page 2, size 5)",
+            "name": "v1 - Liste paginÃ©e (page 2, size 5)",
             "request": {
               "description": {
                 "content": "",
@@ -85,14 +85,14 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Réponse paginée cohérente\", () => {",
+                    "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                     "  pm.expect(b.items.length).to.be.at.most(b.size);",
                     "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
                     "});",
                     "",
-                    "pm.test(\"Page 2 de 5 éléments sur 40\", () => {",
+                    "pm.test(\"Page 2 de 5 Ã©lÃ©ments sur 40\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b.page).to.eql(2);",
                     "  pm.expect(b.items).to.have.length(5);",
@@ -107,7 +107,7 @@
           },
           {
             "id": "dac381fb-3afd-4cd5-a6b1-8abb9f8355d0",
-            "name": "v1 - Détail id 1 (données du seed)",
+            "name": "v1 - DÃ©tail id 1 (donnÃ©es du seed)",
             "request": {
               "description": {
                 "content": "",
@@ -137,11 +137,11 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Correspond à la ligne CHU-CEN-001 du script 02_seed.sql\", () => {",
+                    "pm.test(\"Correspond Ã  la ligne CHU-CEN-001 du script 02_seed.sql\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b).to.eql({id: 1, code: \"CHU-CEN-001\", nom: \"CHU Fictif de Ouagadougou Nord\", type: \"CHU\", region: \"Centre\", ville: \"Ouagadougou\"});",
                     "});",
-                    "pm.test(\"En-tête de corrélation présent\", () => pm.response.to.have.header(\"X-Correlation-ID\"));"
+                    "pm.test(\"En-tÃªte de corrÃ©lation prÃ©sent\", () => pm.response.to.have.header(\"X-Correlation-ID\"));"
                   ],
                   "_lastExecutionId": "0a31af88-35b3-4b46-94d5-abc998503338"
                 }
@@ -150,7 +150,7 @@
           },
           {
             "id": "321f2c81-a570-4c85-8184-d8b43e7d98a3",
-            "name": "v1 - Recherche région Centre + type CSPS",
+            "name": "v1 - Recherche rÃ©gion Centre + type CSPS",
             "request": {
               "description": {
                 "content": "",
@@ -189,7 +189,7 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Réponse paginée cohérente\", () => {",
+                    "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                     "  pm.expect(b.items.length).to.be.at.most(b.size);",
@@ -301,7 +301,7 @@
           },
           {
             "id": "5e030f4a-7ec3-435f-8e44-74e5df7a7523",
-            "name": "Erreur - Recherche sans critère (400)",
+            "name": "Erreur - Recherche sans critÃ¨re (400)",
             "request": {
               "description": {
                 "content": "",
@@ -386,7 +386,7 @@
                     "  pm.expect(b.status).to.eql(pm.response.code);",
                     "});",
                     "",
-                    "pm.test(\"Détail sur le champ size\", () => pm.expect(pm.response.json().details[0].champ).to.eql(\"size\"));"
+                    "pm.test(\"DÃ©tail sur le champ size\", () => pm.expect(pm.response.json().details[0].champ).to.eql(\"size\"));"
                   ],
                   "_lastExecutionId": "c37fe47d-7725-48c9-bcab-bbbd849a1a9c"
                 }
@@ -395,7 +395,7 @@
           },
           {
             "id": "c4d0a496-0807-489e-90c4-68ca7e85c1de",
-            "name": "Erreur - id non numérique (400)",
+            "name": "Erreur - id non numÃ©rique (400)",
             "request": {
               "description": {
                 "content": "",
@@ -486,7 +486,7 @@
           },
           {
             "id": "36939b71-a30f-4e6c-989a-55d60b7715aa",
-            "name": "Erreur - Méthode interdite DELETE (405)",
+            "name": "Erreur - MÃ©thode interdite DELETE (405)",
             "request": {
               "description": {
                 "content": "",
@@ -529,7 +529,7 @@
           },
           {
             "id": "d72545f9-71a6-4490-a885-1608ff8b4258",
-            "name": "v2 - Détail id 9 (nouveau format)",
+            "name": "v2 - DÃ©tail id 9 (nouveau format)",
             "request": {
               "description": {
                 "content": "",
@@ -559,7 +559,7 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Format v2 : localisation imbriquée + nouveaux champs\", () => {",
+                    "pm.test(\"Format v2 : localisation imbriquÃ©e + nouveaux champs\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b.localisation).to.eql({region: \"Hauts-Bassins\", ville: \"Bobo-Dioulasso\"});",
                     "  pm.expect(b).to.include.all.keys(\"statut\", \"nombre_lits\", \"telephone\", \"services\", \"date_ouverture\");",
@@ -573,7 +573,7 @@
           },
           {
             "id": "8a620705-2850-4ab1-a34b-6ef02c4b375b",
-            "name": "v2 - Cliniques privées triées par lits décroissants",
+            "name": "v2 - Cliniques privÃ©es triÃ©es par lits dÃ©croissants",
             "request": {
               "description": {
                 "content": "",
@@ -612,14 +612,14 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Réponse paginée cohérente\", () => {",
+                    "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                     "  pm.expect(b.items.length).to.be.at.most(b.size);",
                     "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
                     "});",
                     "",
-                    "pm.test(\"Toutes privées et triées\", () => {",
+                    "pm.test(\"Toutes privÃ©es et triÃ©es\", () => {",
                     "  const items = pm.response.json().items;",
                     "  items.forEach(s => pm.expect(s.statut).to.eql(\"PRIVE\"));",
                     "  for (let i = 1; i < items.length; i++) pm.expect(items[i - 1].nombre_lits).to.be.at.least(items[i].nombre_lits);",
@@ -635,14 +635,14 @@
       },
       {
         "id": "426f6494-5709-44f0-b7d6-cc153f68007d",
-        "name": "2. Gateway Gravitee - accès et quota",
+        "name": "2. Gateway Gravitee - accÃ¨s et quota",
         "item": [
           {
             "id": "21cf3d79-f815-49d9-84c6-c90958eb4c52",
-            "name": "Sans clé d'API -> 401",
+            "name": "Sans clÃ© d'API -> 401",
             "request": {
               "description": {
-                "content": "Le plan API Key exige l'en-tête X-Gravitee-Api-Key.",
+                "content": "Le plan API Key exige l'en-tÃªte X-Gravitee-Api-Key.",
                 "type": "text/plain"
               },
               "url": {
@@ -674,7 +674,7 @@
           },
           {
             "id": "b080b27b-7e22-4dac-ba8c-81c4fb9087bc",
-            "name": "Clé d'API inventée -> 401",
+            "name": "ClÃ© d'API inventÃ©e -> 401",
             "request": {
               "description": {
                 "content": "",
@@ -715,10 +715,10 @@
           },
           {
             "id": "d4e13f58-b478-4e2f-a491-bc274c8dd539",
-            "name": "Bout en bout - Clé valide -> 200 et données de la base",
+            "name": "Bout en bout - ClÃ© valide -> 200 et donnÃ©es de la base",
             "request": {
               "description": {
-                "content": "Chaîne complète : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
+                "content": "ChaÃ®ne complÃ¨te : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
                 "type": "text/plain"
               },
               "url": {
@@ -749,7 +749,7 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"La gateway renvoie la ligne insérée par 02_seed.sql\", () => {",
+                    "pm.test(\"La gateway renvoie la ligne insÃ©rÃ©e par 02_seed.sql\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b.code).to.eql(\"CHU-CEN-001\");",
                     "  pm.expect(b.nom).to.eql(\"CHU Fictif de Ouagadougou Nord\");",
@@ -762,7 +762,7 @@
           },
           {
             "id": "ed1cf6b5-5a59-4e52-8f2e-4eef469ac767",
-            "name": "Recherche paginée via la gateway",
+            "name": "Recherche paginÃ©e via la gateway",
             "request": {
               "description": {
                 "content": "",
@@ -805,7 +805,7 @@
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                    "pm.test(\"Réponse paginée cohérente\", () => {",
+                    "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                     "  const b = pm.response.json();",
                     "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                     "  pm.expect(b.items.length).to.be.at.most(b.size);",
@@ -819,7 +819,7 @@
           },
           {
             "id": "e7e458f4-a69d-4ba4-a12a-5161604a3474",
-            "name": "Erreur backend relayée par la gateway (404)",
+            "name": "Erreur backend relayÃ©e par la gateway (404)",
             "request": {
               "description": {
                 "content": "",
@@ -898,11 +898,11 @@
                   "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                   "type": "text/javascript",
                   "exec": [
-                    "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                    "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                     "const codes = [];",
                     "const call = (n) => {",
                     "  if (n === 0) {",
-                    "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                    "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                     "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                     "    return;",
                     "  }",
@@ -978,10 +978,10 @@
         "item": [
           {
             "id": "e419ce8d-b37a-4758-b449-a27661280d7a",
-            "name": "Après UNPUBLISH : l'API répond toujours (200)",
+            "name": "AprÃ¨s UNPUBLISH : l'API rÃ©pond toujours (200)",
             "request": {
               "description": {
-                "content": "À lancer quand l'API est retirée du portail (UNPUBLISHED) mais toujours démarrée.",
+                "content": "Ã€ lancer quand l'API est retirÃ©e du portail (UNPUBLISHED) mais toujours dÃ©marrÃ©e.",
                 "type": "text/plain"
               },
               "url": {
@@ -1019,10 +1019,10 @@
           },
           {
             "id": "2acc61b8-075d-4513-b905-c1becfc1386b",
-            "name": "Après STOP : la gateway ne route plus",
+            "name": "AprÃ¨s STOP : la gateway ne route plus",
             "request": {
               "description": {
-                "content": "À lancer quand l'API est arrêtée (Stop the API).",
+                "content": "Ã€ lancer quand l'API est arrÃªtÃ©e (Stop the API).",
                 "type": "text/plain"
               },
               "url": {
@@ -1066,10 +1066,10 @@
     "variable": [],
     "info": {
       "_postman_id": "9d3d1f8c-3682-4431-ab12-4241602c572a",
-      "name": "Thème 22 - Structures sanitaires (Gravitee)",
+      "name": "ThÃ¨me 22 - Structures sanitaires (Gravitee)",
       "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
       "description": {
-        "content": "SI Groupe 2 — IBAM 2026. Dossiers 1 à 3 : exécution automatique (Newman). Dossier 4 : à lancer manuellement selon l'état de l'API.",
+        "content": "SI Groupe 2 â€” IBAM 2026. Dossiers 1 Ã  3 : exÃ©cution automatique (Newman). Dossier 4 : Ã  lancer manuellement selon l'Ã©tat de l'API.",
         "type": "text/plain"
       }
     }
@@ -1095,12 +1095,12 @@
       },
       {
         "type": "any",
-        "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2",
+        "value": "<CLE_V1_MASQUEE>",
         "key": "api_key"
       },
       {
         "type": "any",
-        "value": "80fa1019-99e5-4b05-ba10-1999e55b052f",
+        "value": "<CLE_V2_MASQUEE>",
         "key": "api_key_v2"
       }
     ]
@@ -1189,7 +1189,7 @@
         },
         "item": {
           "id": "fb7bba85-1fab-4b99-bdcb-4bb961ca00d0",
-          "name": "Santé du service",
+          "name": "SantÃ© du service",
           "request": {
             "description": {
               "content": "",
@@ -1390,7 +1390,7 @@
         },
         "item": {
           "id": "5f82b3e7-7c1f-4be7-a714-71b769b745dd",
-          "name": "v1 - Liste paginée (page 2, size 5)",
+          "name": "v1 - Liste paginÃ©e (page 2, size 5)",
           "request": {
             "description": {
               "content": "",
@@ -1428,14 +1428,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                   "  pm.expect(b.items.length).to.be.at.most(b.size);",
                   "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
                   "});",
                   "",
-                  "pm.test(\"Page 2 de 5 éléments sur 40\", () => {",
+                  "pm.test(\"Page 2 de 5 Ã©lÃ©ments sur 40\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.page).to.eql(2);",
                   "  pm.expect(b.items).to.have.length(5);",
@@ -2227,11 +2227,11 @@
             "skipped": false
           },
           {
-            "assertion": "Réponse paginée cohérente",
+            "assertion": "RÃ©ponse paginÃ©e cohÃ©rente",
             "skipped": false
           },
           {
-            "assertion": "Page 2 de 5 éléments sur 40",
+            "assertion": "Page 2 de 5 Ã©lÃ©ments sur 40",
             "skipped": false
           }
         ]
@@ -2247,7 +2247,7 @@
         },
         "item": {
           "id": "dac381fb-3afd-4cd5-a6b1-8abb9f8355d0",
-          "name": "v1 - Détail id 1 (données du seed)",
+          "name": "v1 - DÃ©tail id 1 (donnÃ©es du seed)",
           "request": {
             "description": {
               "content": "",
@@ -2277,11 +2277,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Correspond à la ligne CHU-CEN-001 du script 02_seed.sql\", () => {",
+                  "pm.test(\"Correspond Ã  la ligne CHU-CEN-001 du script 02_seed.sql\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b).to.eql({id: 1, code: \"CHU-CEN-001\", nom: \"CHU Fictif de Ouagadougou Nord\", type: \"CHU\", region: \"Centre\", ville: \"Ouagadougou\"});",
                   "});",
-                  "pm.test(\"En-tête de corrélation présent\", () => pm.response.to.have.header(\"X-Correlation-ID\"));"
+                  "pm.test(\"En-tÃªte de corrÃ©lation prÃ©sent\", () => pm.response.to.have.header(\"X-Correlation-ID\"));"
                 ],
                 "_lastExecutionId": "0a31af88-35b3-4b46-94d5-abc998503338"
               }
@@ -2510,11 +2510,11 @@
             "skipped": false
           },
           {
-            "assertion": "Correspond à la ligne CHU-CEN-001 du script 02_seed.sql",
+            "assertion": "Correspond Ã  la ligne CHU-CEN-001 du script 02_seed.sql",
             "skipped": false
           },
           {
-            "assertion": "En-tête de corrélation présent",
+            "assertion": "En-tÃªte de corrÃ©lation prÃ©sent",
             "skipped": false
           }
         ]
@@ -2530,7 +2530,7 @@
         },
         "item": {
           "id": "321f2c81-a570-4c85-8184-d8b43e7d98a3",
-          "name": "v1 - Recherche région Centre + type CSPS",
+          "name": "v1 - Recherche rÃ©gion Centre + type CSPS",
           "request": {
             "description": {
               "content": "",
@@ -2569,7 +2569,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                   "  pm.expect(b.items.length).to.be.at.most(b.size);",
@@ -2980,7 +2980,7 @@
             "skipped": false
           },
           {
-            "assertion": "Réponse paginée cohérente",
+            "assertion": "RÃ©ponse paginÃ©e cohÃ©rente",
             "skipped": false
           },
           {
@@ -3610,7 +3610,7 @@
         },
         "item": {
           "id": "5e030f4a-7ec3-435f-8e44-74e5df7a7523",
-          "name": "Erreur - Recherche sans critère (400)",
+          "name": "Erreur - Recherche sans critÃ¨re (400)",
           "request": {
             "description": {
               "content": "",
@@ -3935,7 +3935,7 @@
                   "  pm.expect(b.status).to.eql(pm.response.code);",
                   "});",
                   "",
-                  "pm.test(\"Détail sur le champ size\", () => pm.expect(pm.response.json().details[0].champ).to.eql(\"size\"));"
+                  "pm.test(\"DÃ©tail sur le champ size\", () => pm.expect(pm.response.json().details[0].champ).to.eql(\"size\"));"
                 ],
                 "_lastExecutionId": "c37fe47d-7725-48c9-bcab-bbbd849a1a9c"
               }
@@ -4208,7 +4208,7 @@
             "skipped": false
           },
           {
-            "assertion": "Détail sur le champ size",
+            "assertion": "DÃ©tail sur le champ size",
             "skipped": false
           }
         ]
@@ -4224,7 +4224,7 @@
         },
         "item": {
           "id": "c4d0a496-0807-489e-90c4-68ca7e85c1de",
-          "name": "Erreur - id non numérique (400)",
+          "name": "Erreur - id non numÃ©rique (400)",
           "request": {
             "description": {
               "content": "",
@@ -4906,7 +4906,7 @@
         },
         "item": {
           "id": "36939b71-a30f-4e6c-989a-55d60b7715aa",
-          "name": "Erreur - Méthode interdite DELETE (405)",
+          "name": "Erreur - MÃ©thode interdite DELETE (405)",
           "request": {
             "description": {
               "content": "",
@@ -5178,7 +5178,7 @@
         },
         "item": {
           "id": "d72545f9-71a6-4490-a885-1608ff8b4258",
-          "name": "v2 - Détail id 9 (nouveau format)",
+          "name": "v2 - DÃ©tail id 9 (nouveau format)",
           "request": {
             "description": {
               "content": "",
@@ -5208,7 +5208,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Format v2 : localisation imbriquée + nouveaux champs\", () => {",
+                  "pm.test(\"Format v2 : localisation imbriquÃ©e + nouveaux champs\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.localisation).to.eql({region: \"Hauts-Bassins\", ville: \"Bobo-Dioulasso\"});",
                   "  pm.expect(b).to.include.all.keys(\"statut\", \"nombre_lits\", \"telephone\", \"services\", \"date_ouverture\");",
@@ -5638,7 +5638,7 @@
             "skipped": false
           },
           {
-            "assertion": "Format v2 : localisation imbriquée + nouveaux champs",
+            "assertion": "Format v2 : localisation imbriquÃ©e + nouveaux champs",
             "skipped": false
           }
         ]
@@ -5654,7 +5654,7 @@
         },
         "item": {
           "id": "8a620705-2850-4ab1-a34b-6ef02c4b375b",
-          "name": "v2 - Cliniques privées triées par lits décroissants",
+          "name": "v2 - Cliniques privÃ©es triÃ©es par lits dÃ©croissants",
           "request": {
             "description": {
               "content": "",
@@ -5693,14 +5693,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                   "  pm.expect(b.items.length).to.be.at.most(b.size);",
                   "  pm.expect(b.pages).to.eql(Math.ceil(b.total / b.size));",
                   "});",
                   "",
-                  "pm.test(\"Toutes privées et triées\", () => {",
+                  "pm.test(\"Toutes privÃ©es et triÃ©es\", () => {",
                   "  const items = pm.response.json().items;",
                   "  items.forEach(s => pm.expect(s.statut).to.eql(\"PRIVE\"));",
                   "  for (let i = 1; i < items.length; i++) pm.expect(items[i - 1].nombre_lits).to.be.at.least(items[i].nombre_lits);",
@@ -7541,11 +7541,11 @@
             "skipped": false
           },
           {
-            "assertion": "Réponse paginée cohérente",
+            "assertion": "RÃ©ponse paginÃ©e cohÃ©rente",
             "skipped": false
           },
           {
-            "assertion": "Toutes privées et triées",
+            "assertion": "Toutes privÃ©es et triÃ©es",
             "skipped": false
           }
         ]
@@ -7561,10 +7561,10 @@
         },
         "item": {
           "id": "21cf3d79-f815-49d9-84c6-c90958eb4c52",
-          "name": "Sans clé d'API -> 401",
+          "name": "Sans clÃ© d'API -> 401",
           "request": {
             "description": {
-              "content": "Le plan API Key exige l'en-tête X-Gravitee-Api-Key.",
+              "content": "Le plan API Key exige l'en-tÃªte X-Gravitee-Api-Key.",
               "type": "text/plain"
             },
             "url": {
@@ -7596,7 +7596,7 @@
         },
         "request": {
           "description": {
-            "content": "Le plan API Key exige l'en-tête X-Gravitee-Api-Key.",
+            "content": "Le plan API Key exige l'en-tÃªte X-Gravitee-Api-Key.",
             "type": "text/plain"
           },
           "url": {
@@ -7752,7 +7752,7 @@
         },
         "item": {
           "id": "b080b27b-7e22-4dac-ba8c-81c4fb9087bc",
-          "name": "Clé d'API inventée -> 401",
+          "name": "ClÃ© d'API inventÃ©e -> 401",
           "request": {
             "description": {
               "content": "",
@@ -7953,10 +7953,10 @@
         },
         "item": {
           "id": "d4e13f58-b478-4e2f-a491-bc274c8dd539",
-          "name": "Bout en bout - Clé valide -> 200 et données de la base",
+          "name": "Bout en bout - ClÃ© valide -> 200 et donnÃ©es de la base",
           "request": {
             "description": {
-              "content": "Chaîne complète : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
+              "content": "ChaÃ®ne complÃ¨te : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
               "type": "text/plain"
             },
             "url": {
@@ -7987,7 +7987,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"La gateway renvoie la ligne insérée par 02_seed.sql\", () => {",
+                  "pm.test(\"La gateway renvoie la ligne insÃ©rÃ©e par 02_seed.sql\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.code).to.eql(\"CHU-CEN-001\");",
                   "  pm.expect(b.nom).to.eql(\"CHU Fictif de Ouagadougou Nord\");",
@@ -8000,7 +8000,7 @@
         },
         "request": {
           "description": {
-            "content": "Chaîne complète : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
+            "content": "ChaÃ®ne complÃ¨te : application souscrite -> gateway Gravitee -> FastAPI -> PostgreSQL.",
             "type": "text/plain"
           },
           "url": {
@@ -8022,7 +8022,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -8261,7 +8261,7 @@
             "skipped": false
           },
           {
-            "assertion": "La gateway renvoie la ligne insérée par 02_seed.sql",
+            "assertion": "La gateway renvoie la ligne insÃ©rÃ©e par 02_seed.sql",
             "skipped": false
           }
         ]
@@ -8277,7 +8277,7 @@
         },
         "item": {
           "id": "ed1cf6b5-5a59-4e52-8f2e-4eef469ac767",
-          "name": "Recherche paginée via la gateway",
+          "name": "Recherche paginÃ©e via la gateway",
           "request": {
             "description": {
               "content": "",
@@ -8320,7 +8320,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Réponse paginée cohérente\", () => {",
+                  "pm.test(\"RÃ©ponse paginÃ©e cohÃ©rente\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b).to.include.all.keys(\"page\", \"size\", \"total\", \"pages\", \"items\");",
                   "  pm.expect(b.items.length).to.be.at.most(b.size);",
@@ -8365,7 +8365,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -8782,7 +8782,7 @@
             "skipped": false
           },
           {
-            "assertion": "Réponse paginée cohérente",
+            "assertion": "RÃ©ponse paginÃ©e cohÃ©rente",
             "skipped": false
           }
         ]
@@ -8798,7 +8798,7 @@
         },
         "item": {
           "id": "e7e458f4-a69d-4ba4-a12a-5161604a3474",
-          "name": "Erreur backend relayée par la gateway (404)",
+          "name": "Erreur backend relayÃ©e par la gateway (404)",
           "request": {
             "description": {
               "content": "",
@@ -8867,7 +8867,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -9134,11 +9134,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -9174,7 +9174,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -9372,7 +9372,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -9422,11 +9422,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -9462,7 +9462,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -9660,7 +9660,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -9710,11 +9710,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -9750,7 +9750,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -9948,7 +9948,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -9998,11 +9998,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -10038,7 +10038,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -10236,7 +10236,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -10286,11 +10286,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -10326,7 +10326,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -10524,7 +10524,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -10574,11 +10574,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -10614,7 +10614,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -10812,7 +10812,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -10862,11 +10862,11 @@
                 "id": "f457f19a-415a-4926-8383-57fa038dd38f",
                 "type": "text/javascript",
                 "exec": [
-                  "// Envoie 6 appels supplémentaires en rafale : la politique Rate Limit (5 req / 10 s) doit répondre 429.",
+                  "// Envoie 6 appels supplÃ©mentaires en rafale : la politique Rate Limit (5 req / 10 s) doit rÃ©pondre 429.",
                   "const codes = [];",
                   "const call = (n) => {",
                   "  if (n === 0) {",
-                  "    pm.test(\"Au moins une réponse 429 (quota dépassé)\", () => pm.expect(codes).to.include(429));",
+                  "    pm.test(\"Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)\", () => pm.expect(codes).to.include(429));",
                   "    console.log(\"Codes obtenus :\", codes.join(\", \"));",
                   "    return;",
                   "  }",
@@ -10902,7 +10902,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "5106cd5c-32b6-49c3-86cd-5c32b629c3d2"
+              "value": "<CLE_V1_MASQUEE>"
             },
             {
               "key": "User-Agent",
@@ -11100,7 +11100,7 @@
         "id": "a380542f-edef-4520-b785-eb84072f9e99",
         "assertions": [
           {
-            "assertion": "Au moins une réponse 429 (quota dépassé)",
+            "assertion": "Au moins une rÃ©ponse 429 (quota dÃ©passÃ©)",
             "skipped": false
           }
         ]
@@ -11181,7 +11181,7 @@
           "header": [
             {
               "key": "X-Gravitee-Api-Key",
-              "value": "80fa1019-99e5-4b05-ba10-1999e55b052f"
+              "value": "<CLE_V2_MASQUEE>"
             },
             {
               "key": "User-Agent",
