@@ -85,6 +85,19 @@ Ensuite, configurer Gravitee en suivant **[gravitee/README.md](gravitee/README.m
 La v2 (`/sante/structures/v2`) regroupe région et ville dans `localisation`, ajoute statut, nombre de lits, téléphone, services, date d'ouverture, le filtre `statut` et le tri `tri` (`nom`, `-nom`, `lits`, `-lits`).
 
 Toutes les requêtes via la gateway exigent l'en-tête `X-Gravitee-Api-Key`. Format et liste des erreurs : [docs/erreurs.md](docs/erreurs.md).
+### Pagination
+
+Les listes de resultats prennent en charge la pagination via deux parametres de requete optionnels :
+• page : L index de la page a recuperer (1 par defaut).
+• size : Le nombre d elements par page (10 par defaut, avec une limite maximale de 100).
+Chaque reponse paginee retourne un objet contenant les proprietes suivantes :
+• page : La page courante.
+• size : La taille de la page.
+• total : Le nombre total d elements disponibles.
+• pages : Le nombre total de pages (calcule selon la formule : total divise par size, arrondi a l entier superieur).
+• items : Le tableau des donnees de la page actuelle.
+Exemple concret :
+On prend Une requete sur GET /structures?page=2&size=5 pour un ensemble de 40 structures au total retournera un resultat reparti sur 8 pages. Cette deuxieme page affichera specifiquement les structures correspondantes aux identifiants 6 a 10.
 
 ## Tests
 
