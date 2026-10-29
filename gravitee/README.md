@@ -29,6 +29,11 @@ Les libellés correspondent à la Console APIM 4.x (Community Edition). Faire un
 5. Fermer le plan `Découverte` (icône de fermeture) pour que l'accès sans clé ne soit plus possible.
 6. **Deploy API** (bandeau en haut).
 7. Test : `curl -i http://localhost:8082/sante/structures/v1/structures` → **401**.
+8. Remarque : rate limit ou quota ?:
+      •	Le rate limit (5 requêtes / 10 s) protège contre les pics : le compteur repart à zéro toutes les 10 secondes.
+      •	Le quota (1 000 requêtes / jour) limite le volume total consommé par une application.
+      •	Dans les deux cas, la gateway répond 429 ; les en-têtes X-Rate-Limit-* et X-Quota-* indiquent ce qu'il reste.
+
 
 ## C. Application consommatrice et souscription
 
