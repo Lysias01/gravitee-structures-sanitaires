@@ -36,3 +36,35 @@ Toutes les erreurs du backend ont le même corps JSON :
 ## Traçabilité
 
 Chaque réponse du backend porte un en-tête `X-Correlation-ID` (repris de `X-Gravitee-Request-Id` quand l'appel passe par la gateway), et chaque requête est journalisée avec sa méthode, son chemin, son code HTTP et sa durée : `docker logs structures_api`.
+
+### Exemple 1 : structure inexistante
+
+Requête : GET /api/v1/structures/999
+
+L'identifiant 999 n'existe pas dans la base, l'API répond *404* :
+
+json
+{
+  "status": 404,
+  "code": "STRUCTURE_NOT_FOUND",
+  "message": "Aucune structure avec l'id 999",
+  "details": []
+}
+
+
+### Exemple 2 : paramètre invalide
+
+Requête : GET /api/v1/structures?size=500
+
+La taille de page est limitée à 100, l'API répond *400* et indique le champ en cause dans details :
+
+json
+{
+  "status": 400,
+  "code": "VALIDATION_ERROR",
+  "message": "Paramètres invalides",
+  "details": [
+    { "champ": "size", "message": "Input should be less than or equal to 100" }
+  ]
+}
+Un format d’erreur standardisé permet aux applications clientes de gérer toutes les erreurs de la même manière. Elles peuvent analyser le champ code pour identifier le type de problème et utiliser message pour informer clairement l’utilisateur, sans avoir à développer un traitement spécifique pour chaque erreur.
